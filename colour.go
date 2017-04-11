@@ -31,7 +31,7 @@ func (c *Colour) B() uint8 {
   return c.b
 }
 
-func FromString(s string) (*Colour, error) {
+func ColourFromHexString(s string) (*Colour, error) {
   var br, r, g, b uint8
 
   valid_input, _ := regexp.MatchString("^[a-zA-Z0-9]{6}([a-zA-Z0-9]{2})?$", s)
