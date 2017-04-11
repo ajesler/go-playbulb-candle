@@ -1,27 +1,26 @@
 package playbulb
 
-type Mode int
-
 const (
-  CANDLE  Mode = 1
-  FLASH   Mode = 2
-  PULSE   Mode = 3
-  RAINBOW Mode = 4
-  FADE    Mode = 5
+  FLASH   uint8 = 0
+  PULSE   uint8 = 1
+  RAINBOW uint8 = 2
+  FADE    uint8 = 3
+  CANDLE  uint8 = 4
+  SOLID   uint8 = 5
 )
 
 type Effect struct {
-  mode Mode
+  mode uint8
   colour *Colour
   speed uint8
 }
 
-func NewEffect(m Mode, c *Colour, s uint8) *Effect {
+func NewEffect(m uint8, c *Colour, s uint8) *Effect {
   e := Effect { mode: m, colour: c, speed: s }
   return &e
 }
 
-func (e *Effect) Mode() Mode {
+func (e *Effect) Mode() uint8 {
   return e.mode
 }
 
