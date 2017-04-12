@@ -34,24 +34,24 @@ func (c *Colour) B() uint8 {
 func ColourFromHexString(s string) (*Colour, error) {
 	var br, r, g, b uint8
 
-	valid_input, _ := regexp.MatchString("^[a-zA-Z0-9]{6}([a-zA-Z0-9]{2})?$", s)
-	if !valid_input {
+	validColourString, _ := regexp.MatchString("^[a-zA-Z0-9]{6}([a-zA-Z0-9]{2})?$", s)
+	if !validColourString {
 		return nil, errors.New("Only 6 or 8 character hex colours are supported")
 	}
 
 	if len(s) == 8 {
-		br = HexToUint8(s[:2])
+		br = hexToUint8(s[:2])
 		s = s[2:]
 	}
 
-	r = HexToUint8(s[:2])
-	g = HexToUint8(s[2:4])
-	b = HexToUint8(s[4:])
+	r = hexToUint8(s[:2])
+	g = hexToUint8(s[2:4])
+	b = hexToUint8(s[4:])
 
 	return NewColour(br, r, g, b), nil
 }
 
-func HexToUint8(s string) uint8 {
+func hexToUint8(s string) uint8 {
 	v, _ := hex.DecodeString(s)
 	return v[0]
 }
