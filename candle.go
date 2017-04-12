@@ -124,10 +124,8 @@ func (p *Candle) solidColourEffect(c *Colour) *Effect {
 }
 
 func (p *Candle) onStateChanged(d gatt.Device, s gatt.State) {
-	fmt.Println("State: ", s)
 	switch s {
 	case gatt.StatePoweredOn:
-		fmt.Println("Scanning...")
 		d.Scan([]gatt.UUID{}, false)
 		return
 	default:
@@ -145,8 +143,6 @@ func (p *Candle) onPeripheralDiscovered(per gatt.Peripheral, a *gatt.Advertiseme
 }
 
 func (p *Candle) onPeripheralConnected(per gatt.Peripheral, err error) {
-	fmt.Println("Connected to playbulb", per.ID())
-
 	services, err := per.DiscoverServices(nil)
 	if err != nil {
 		fmt.Printf("Failed to discover services, err: %s\n", err)
