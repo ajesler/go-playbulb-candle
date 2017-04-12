@@ -25,7 +25,6 @@ func main() {
 		fmt.Println("Failed to connect", err)
 	}
 
-	// time.Sleep(time.Second * 1)
 	red, _ := playbulb.ColourFromHexString("00FF0000")
 	green, _ := playbulb.ColourFromHexString("8000FF00") // light green
 	blue, _ := playbulb.ColourFromHexString("000000FF")
