@@ -8,13 +8,11 @@ import (
 )
 
 const (
-	// TODO turn these into UUIDs
 	candleServiceUUID = "ff02"
 	effectCharUUID    = "fffb"
 	colourCharUUID    = "fffc"
 )
 
-// TODO add Logging with controllable level so the fmt.Print's can be removed
 type Candle struct {
 	id               string
 	per              gatt.Peripheral
@@ -84,7 +82,6 @@ func (p *Candle) ReadEffect() ([]byte, error) {
 }
 
 func (p *Candle) Connect() error {
-	// TODO add a timeout if device not found within x seconds
 	if p.connected {
 		return nil
 	}
@@ -150,7 +147,7 @@ func (p *Candle) onPeripheralDiscovered(per gatt.Peripheral, a *gatt.Advertiseme
 func (p *Candle) onPeripheralConnected(per gatt.Peripheral, err error) {
 	fmt.Println("Connected to playbulb", per.ID())
 
-	services, err := per.DiscoverServices(nil) // p.DiscoverServices([]gatt.UUID{candleServiceUUID})
+	services, err := per.DiscoverServices(nil)
 	if err != nil {
 		fmt.Printf("Failed to discover services, err: %s\n", err)
 		return
@@ -161,7 +158,7 @@ func (p *Candle) onPeripheralConnected(per gatt.Peripheral, err error) {
 			continue
 		}
 
-		cs, err := per.DiscoverCharacteristics(nil, s) // per.DiscoverCharacteristics([]gatt.UUID{charEffectUUID,colourEffectUUID}, s)
+		cs, err := per.DiscoverCharacteristics(nil, s)
 		if err != nil {
 			fmt.Printf("Failed to discover characteristics, err: %s\n", err)
 			continue
