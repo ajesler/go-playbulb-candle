@@ -17,7 +17,7 @@ func delay() {
 }
 
 func main() {
-	p := playbulb.NewPlaybulbCandle(candleID)
+	p := playbulb.NewCandle(candleID)
 
 	fmt.Println("Connecting to", candleID)
 	err := p.Connect()

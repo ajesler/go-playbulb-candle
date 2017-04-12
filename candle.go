@@ -15,7 +15,7 @@ const (
 )
 
 // TODO add Logging with controllable level so the fmt.Print's can be removed
-type PlaybulbCandle struct {
+type Candle struct {
 	id               string
 	per              gatt.Peripheral
 	colourChar       *gatt.Characteristic
@@ -25,8 +25,8 @@ type PlaybulbCandle struct {
 	connected        bool
 }
 
-func NewPlaybulbCandle(id string) *PlaybulbCandle {
-	p := PlaybulbCandle{
+func NewCandle(id string) *Candle {
+	p := Candle{
 		id:               id,
 		doneChannel:      make(chan struct{}),
 		connectedChannel: make(chan bool),
@@ -35,14 +35,14 @@ func NewPlaybulbCandle(id string) *PlaybulbCandle {
 	return &p
 }
 
-func (p *PlaybulbCandle) Off() {
+func (p *Candle) Off() {
 	c := NewColour(0, 0, 0, 0)
 	e := p.solidColourEffect(c)
 
 	p.SetEffect(e)
 }
 
-func (p *PlaybulbCandle) SetColour(c *Colour) error {
+func (p *Candle) SetColour(c *Colour) error {
 	e := p.solidColourEffect(c)
 	payload := p.effectPayload(e)
 
@@ -53,7 +53,7 @@ func (p *PlaybulbCandle) SetColour(c *Colour) error {
 	return nil
 }
 
-func (p *PlaybulbCandle) ReadColour() ([]byte, error) {
+func (p *Candle) ReadColour() ([]byte, error) {
 	currentColour, err := p.per.ReadCharacteristic(p.colourChar)
 
 	if err != nil {
@@ -64,7 +64,7 @@ func (p *PlaybulbCandle) ReadColour() ([]byte, error) {
 	return currentColour, nil
 }
 
-func (p *PlaybulbCandle) SetEffect(e *Effect) error {
+func (p *Candle) SetEffect(e *Effect) error {
 	payload := p.effectPayload(e)
 
 	err := p.per.WriteCharacteristic(p.effectChar, payload, true)
@@ -74,7 +74,7 @@ func (p *PlaybulbCandle) SetEffect(e *Effect) error {
 	return nil
 }
 
-func (p *PlaybulbCandle) ReadEffect() ([]byte, error) {
+func (p *Candle) ReadEffect() ([]byte, error) {
 	currentEffect, err := p.per.ReadCharacteristic(p.effectChar)
 	if err != nil {
 		fmt.Println("Failed to read characteristic:", err)
@@ -83,7 +83,7 @@ func (p *PlaybulbCandle) ReadEffect() ([]byte, error) {
 	return currentEffect, nil
 }
 
-func (p *PlaybulbCandle) Connect() error {
+func (p *Candle) Connect() error {
 	// TODO add a timeout if device not found within x seconds
 	if p.connected {
 		return nil
@@ -106,27 +106,27 @@ func (p *PlaybulbCandle) Connect() error {
 	return nil
 }
 
-func (p *PlaybulbCandle) Disconnect() {
+func (p *Candle) Disconnect() {
 	if p.connected {
 		p.per.Device().CancelConnection(p.per)
 	}
 }
 
-func (p *PlaybulbCandle) colourPayload(c *Colour) []byte {
+func (p *Candle) colourPayload(c *Colour) []byte {
 	return []byte{c.Brightness(), c.R(), c.G(), c.B()}
 }
 
-func (p *PlaybulbCandle) effectPayload(e *Effect) []byte {
+func (p *Candle) effectPayload(e *Effect) []byte {
 	return []byte{
 		e.Colour().Brightness(), e.Colour().R(), e.Colour().G(), e.Colour().B(),
 		e.Mode(), 0, e.Speed(), 0}
 }
 
-func (p *PlaybulbCandle) solidColourEffect(c *Colour) *Effect {
+func (p *Candle) solidColourEffect(c *Colour) *Effect {
 	return NewEffect(SOLID, c, 0)
 }
 
-func (p *PlaybulbCandle) onStateChanged(d gatt.Device, s gatt.State) {
+func (p *Candle) onStateChanged(d gatt.Device, s gatt.State) {
 	fmt.Println("State: ", s)
 	switch s {
 	case gatt.StatePoweredOn:
@@ -138,7 +138,7 @@ func (p *PlaybulbCandle) onStateChanged(d gatt.Device, s gatt.State) {
 	}
 }
 
-func (p *PlaybulbCandle) onPeripheralDiscovered(per gatt.Peripheral, a *gatt.Advertisement, rssi int) {
+func (p *Candle) onPeripheralDiscovered(per gatt.Peripheral, a *gatt.Advertisement, rssi int) {
 	if strings.ToUpper(per.ID()) != strings.ToUpper(p.id) {
 		return
 	}
@@ -147,7 +147,7 @@ func (p *PlaybulbCandle) onPeripheralDiscovered(per gatt.Peripheral, a *gatt.Adv
 	per.Device().Connect(per)
 }
 
-func (p *PlaybulbCandle) onPeripheralConnected(per gatt.Peripheral, err error) {
+func (p *Candle) onPeripheralConnected(per gatt.Peripheral, err error) {
 	fmt.Println("Connected to playbulb", per.ID())
 
 	services, err := per.DiscoverServices(nil) // p.DiscoverServices([]gatt.UUID{candleServiceUUID})
@@ -185,7 +185,7 @@ func (p *PlaybulbCandle) onPeripheralConnected(per gatt.Peripheral, err error) {
 	p.connectedChannel <- true
 }
 
-func (p *PlaybulbCandle) onPeripheralDisconnected(per gatt.Peripheral, err error) {
+func (p *Candle) onPeripheralDisconnected(per gatt.Peripheral, err error) {
 	p.connectedChannel <- false
 
 	p.per = nil
