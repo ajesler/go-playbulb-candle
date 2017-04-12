@@ -73,7 +73,12 @@ func main() {
 
 	candle := playbulb.NewCandle(*idFlag)
 
-	candle.Connect()
+	err = candle.Connect()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	candle.SetEffect(effect)
 
 	// Required to give the SetEffect time to send before disconnection

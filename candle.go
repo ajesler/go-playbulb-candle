@@ -1,10 +1,12 @@
 package playbulb
 
 import (
+	"errors"
 	"fmt"
 	"github.com/currantlabs/gatt"
 	"github.com/currantlabs/gatt/examples/option"
 	"strings"
+	"time"
 )
 
 const (
@@ -99,8 +101,14 @@ func (p *Candle) Connect() error {
 
 	d.Init(p.onStateChanged)
 
-	p.connected = <-p.connectedChannel
-	return nil
+	select {
+	case c := <-p.connectedChannel:
+		p.connected = c
+		return nil
+	case <-time.After(time.Second * 5):
+		p.connected = false
+		return errors.New(fmt.Sprintf("Failed to connect to candle %s before the five second timeout expired", p.id))
+	}
 }
 
 func (p *Candle) Disconnect() {
@@ -179,7 +187,7 @@ func (p *Candle) onPeripheralConnected(per gatt.Peripheral, err error) {
 }
 
 func (p *Candle) onPeripheralDisconnected(per gatt.Peripheral, err error) {
-	p.connectedChannel <- false
+	p.connected = false
 
 	p.per = nil
 	p.colourChar = nil
