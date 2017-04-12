@@ -61,12 +61,12 @@ func main() {
 		return
 	}
 
-	speed := uint8(0)
+	speed := byte(0)
 	if *speedFlag > 255 || *speedFlag < 0 {
 		fmt.Println("Speed must be between 0 and 255")
 		return
 	} else {
-		speed = uint8(*speedFlag)
+		speed = byte(*speedFlag)
 	}
 
 	effect := playbulb.NewEffect(eM, colour, speed)

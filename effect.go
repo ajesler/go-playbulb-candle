@@ -1,26 +1,26 @@
 package playbulb
 
 const (
-	FLASH   uint8 = 0
-	PULSE   uint8 = 1
-	RAINBOW uint8 = 2
-	FADE    uint8 = 3
-	CANDLE  uint8 = 4
-	SOLID   uint8 = 5
+	FLASH   byte = 0
+	PULSE   byte = 1
+	RAINBOW byte = 2
+	FADE    byte = 3
+	CANDLE  byte = 4
+	SOLID   byte = 5
 )
 
 type Effect struct {
-	mode   uint8
+	mode   byte
 	colour *Colour
-	speed  uint8
+	speed  byte
 }
 
-func NewEffect(m uint8, c *Colour, s uint8) *Effect {
+func NewEffect(m byte, c *Colour, s byte) *Effect {
 	e := Effect{mode: m, colour: c, speed: s}
 	return &e
 }
 
-func (e *Effect) Mode() uint8 {
+func (e *Effect) Mode() byte {
 	return e.mode
 }
 
@@ -28,6 +28,6 @@ func (e *Effect) Colour() *Colour {
 	return e.colour
 }
 
-func (e *Effect) Speed() uint8 {
+func (e *Effect) Speed() byte {
 	return e.speed
 }

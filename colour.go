@@ -7,32 +7,32 @@ import (
 )
 
 type Colour struct {
-	brightness, r, g, b uint8
+	brightness, r, g, b byte
 }
 
-func NewColour(brightness uint8, r uint8, g uint8, b uint8) *Colour {
+func NewColour(brightness byte, r byte, g byte, b byte) *Colour {
 	c := Colour{brightness: brightness, r: r, g: g, b: b}
 	return &c
 }
 
-func (c *Colour) Brightness() uint8 {
+func (c *Colour) Brightness() byte {
 	return c.brightness
 }
 
-func (c *Colour) R() uint8 {
+func (c *Colour) R() byte {
 	return c.r
 }
 
-func (c *Colour) G() uint8 {
+func (c *Colour) G() byte {
 	return c.g
 }
 
-func (c *Colour) B() uint8 {
+func (c *Colour) B() byte {
 	return c.b
 }
 
 func ColourFromHexString(s string) (*Colour, error) {
-	var br, r, g, b uint8
+	var br, r, g, b byte
 
 	validColourString, _ := regexp.MatchString("^[a-zA-Z0-9]{6}([a-zA-Z0-9]{2})?$", s)
 	if !validColourString {
@@ -40,18 +40,18 @@ func ColourFromHexString(s string) (*Colour, error) {
 	}
 
 	if len(s) == 8 {
-		br = hexToUint8(s[:2])
+		br = hexToByte(s[:2])
 		s = s[2:]
 	}
 
-	r = hexToUint8(s[:2])
-	g = hexToUint8(s[2:4])
-	b = hexToUint8(s[4:])
+	r = hexToByte(s[:2])
+	g = hexToByte(s[2:4])
+	b = hexToByte(s[4:])
 
 	return NewColour(br, r, g, b), nil
 }
 
-func hexToUint8(s string) uint8 {
+func hexToByte(s string) byte {
 	v, _ := hex.DecodeString(s)
 	return v[0]
 }

@@ -8,7 +8,7 @@ import (
 func TestEffect_NewEffect(t *testing.T) {
 	m := playbulb.PULSE
 	c := playbulb.NewColour(1, 2, 3, 4)
-	s := uint8(38)
+	s := byte(38)
 
 	e := playbulb.NewEffect(m, c, s)
 
