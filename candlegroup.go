@@ -9,7 +9,7 @@ type CandleGroup struct {
   candles []Candle
 }
 
-func NewCandleGroup(cs ...Candle) *CandleGroup {
+func NewCandleGroup(cs []Candle) *CandleGroup {
   return &CandleGroup{
     candles: cs,
   }
