@@ -1,7 +1,7 @@
 package playbulb_test
 
 import (
-	"go-playbulb-candle"
+	"playbulb-candle"
 	"testing"
 )
 

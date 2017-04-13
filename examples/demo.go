@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"go-playbulb-candle"
+	"playbulb-candle"
 	"time"
 )
 

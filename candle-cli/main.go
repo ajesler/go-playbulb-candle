@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"go-playbulb-candle"
+	"playbulb-candle"
 )
 
 var (
