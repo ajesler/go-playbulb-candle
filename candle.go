@@ -15,7 +15,17 @@ const (
 	colourCharUUID    = "fffc"
 )
 
-type Candle struct {
+type Candle interface {
+	Connect() error
+	Disconnect()
+	IsConnected() bool
+
+	SetEffect(*Effect) error
+	SetColour(*Colour) error
+	Off() error
+}
+
+type candle struct {
 	id               string
 	per              gatt.Peripheral
 	colourChar       *gatt.Characteristic
@@ -25,24 +35,23 @@ type Candle struct {
 	connected        bool
 }
 
-func NewCandle(id string) *Candle {
-	p := Candle{
+func NewCandle(id string) *candle {
+	return &candle{
 		id:               id,
 		doneChannel:      make(chan struct{}),
 		connectedChannel: make(chan bool),
 		connected:        false,
 	}
-	return &p
 }
 
-func (p *Candle) Off() {
+func (p *candle) Off() error {
 	c := NewColour(0, 0, 0, 0)
 	e := p.solidColourEffect(c)
 
-	p.SetEffect(e)
+	return p.SetEffect(e)
 }
 
-func (p *Candle) SetColour(c *Colour) error {
+func (p *candle) SetColour(c *Colour) error {
 	e := p.solidColourEffect(c)
 	payload := p.effectPayload(e)
 
@@ -53,7 +62,7 @@ func (p *Candle) SetColour(c *Colour) error {
 	return nil
 }
 
-func (p *Candle) ReadColour() ([]byte, error) {
+func (p *candle) ReadColour() ([]byte, error) {
 	currentColour, err := p.per.ReadCharacteristic(p.colourChar)
 
 	if err != nil {
@@ -64,7 +73,7 @@ func (p *Candle) ReadColour() ([]byte, error) {
 	return currentColour, nil
 }
 
-func (p *Candle) SetEffect(e *Effect) error {
+func (p *candle) SetEffect(e *Effect) error {
 	payload := p.effectPayload(e)
 
 	err := p.per.WriteCharacteristic(p.effectChar, payload, true)
@@ -74,7 +83,7 @@ func (p *Candle) SetEffect(e *Effect) error {
 	return nil
 }
 
-func (p *Candle) ReadEffect() ([]byte, error) {
+func (p *candle) ReadEffect() ([]byte, error) {
 	currentEffect, err := p.per.ReadCharacteristic(p.effectChar)
 	if err != nil {
 		fmt.Println("Failed to read characteristic:", err)
@@ -83,7 +92,7 @@ func (p *Candle) ReadEffect() ([]byte, error) {
 	return currentEffect, nil
 }
 
-func (p *Candle) Connect() error {
+func (p *candle) Connect() error {
 	if p.connected {
 		return nil
 	}
@@ -111,27 +120,31 @@ func (p *Candle) Connect() error {
 	}
 }
 
-func (p *Candle) Disconnect() {
+func (p *candle) IsConnected() bool {
+	return p.connected
+}
+
+func (p *candle) Disconnect() {
 	if p.connected {
 		p.per.Device().CancelConnection(p.per)
 	}
 }
 
-func (p *Candle) colourPayload(c *Colour) []byte {
+func (p *candle) colourPayload(c *Colour) []byte {
 	return []byte{c.Brightness(), c.R(), c.G(), c.B()}
 }
 
-func (p *Candle) effectPayload(e *Effect) []byte {
+func (p *candle) effectPayload(e *Effect) []byte {
 	return []byte{
 		e.Colour().Brightness(), e.Colour().R(), e.Colour().G(), e.Colour().B(),
 		e.Mode(), 0, e.Speed(), 0}
 }
 
-func (p *Candle) solidColourEffect(c *Colour) *Effect {
+func (p *candle) solidColourEffect(c *Colour) *Effect {
 	return NewEffect(SOLID, c, 0)
 }
 
-func (p *Candle) onStateChanged(d gatt.Device, s gatt.State) {
+func (p *candle) onStateChanged(d gatt.Device, s gatt.State) {
 	switch s {
 	case gatt.StatePoweredOn:
 		d.Scan([]gatt.UUID{}, false)
@@ -141,7 +154,7 @@ func (p *Candle) onStateChanged(d gatt.Device, s gatt.State) {
 	}
 }
 
-func (p *Candle) onPeripheralDiscovered(per gatt.Peripheral, a *gatt.Advertisement, rssi int) {
+func (p *candle) onPeripheralDiscovered(per gatt.Peripheral, a *gatt.Advertisement, rssi int) {
 	if strings.ToUpper(per.ID()) != strings.ToUpper(p.id) {
 		return
 	}
@@ -150,7 +163,7 @@ func (p *Candle) onPeripheralDiscovered(per gatt.Peripheral, a *gatt.Advertiseme
 	per.Device().Connect(per)
 }
 
-func (p *Candle) onPeripheralConnected(per gatt.Peripheral, err error) {
+func (p *candle) onPeripheralConnected(per gatt.Peripheral, err error) {
 	services, err := per.DiscoverServices(nil)
 	if err != nil {
 		fmt.Printf("Failed to discover services, err: %s\n", err)
@@ -186,7 +199,7 @@ func (p *Candle) onPeripheralConnected(per gatt.Peripheral, err error) {
 	p.connectedChannel <- true
 }
 
-func (p *Candle) onPeripheralDisconnected(per gatt.Peripheral, err error) {
+func (p *candle) onPeripheralDisconnected(per gatt.Peripheral, err error) {
 	p.connected = false
 
 	p.per = nil
