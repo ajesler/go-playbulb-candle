@@ -10,7 +10,6 @@ import (
 )
 
 var (
-	idFlag     = flag.String("id", "", "the id of the bulb (required)")
 	effectFlag = flag.String("effect", "", "[flash|pulse|rainbow|fade|candle|solid]")
 	colourFlag = flag.String("colour", "", "6 or 8 character hex code. If 8 characters, the first byte is the brightness")
 	speedFlag  = flag.Int("speed", 0, "a value from 0 - 255")
@@ -69,9 +68,25 @@ func main() {
 		speed = byte(*speedFlag)
 	}
 
+	candleIDs := flag.Args()
+	if len(candleIDs) == 0 {
+		fmt.Println("No candle IDs given")
+		return
+	}
+
 	effect := playbulb.NewEffect(eM, colour, speed)
 
-	candle := playbulb.NewCandle(*idFlag)
+	candle := (playbulb.Candle)(nil)
+	if len(candleIDs) == 1 {
+		candle = playbulb.NewCandle(candleIDs[0])
+	} else {
+		candles := make([]playbulb.Candle, len(candleIDs))
+		for i, cID := range candleIDs {
+			c := playbulb.NewCandle(cID)
+			candles[i] = c
+		}
+		candle = playbulb.NewCandleGroup(candles)
+	}
 
 	err = candle.Connect()
 	if err != nil {
