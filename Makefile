@@ -1,7 +1,7 @@
 default: build
 
 build: clean
-	go build -o build/candle-cli candle-cli/main.go
+	go build -o pkg/candle-cli candle-cli/main.go
 
 test:
 	go test
