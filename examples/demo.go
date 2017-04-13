@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"playbulb-candle"
 	"time"
+	"github.com/ajesler/playbulb-candle"
 )
 
 const (

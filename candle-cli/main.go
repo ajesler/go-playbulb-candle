@@ -6,8 +6,7 @@ import (
 	"fmt"
 	"os"
 	"time"
-
-	"playbulb-candle"
+	"github.com/ajesler/playbulb-candle"
 )
 
 var (
