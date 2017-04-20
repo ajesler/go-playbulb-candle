@@ -54,7 +54,7 @@ func main() {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
-		sig := <-sigs
+		<-sigs
 		done <- true
 	}()
 
