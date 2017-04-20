@@ -44,7 +44,7 @@ func onPeripheralDiscovered(p gatt.Peripheral, a *gatt.Advertisement, rssi int) 
 	knownPeripheral := containsString(peripherals, p.ID())
 
 	if !knownPeripheral {
-		fmt.Printf("\nPeripheral ID:%s (name: %s) has a candle service\n", p.ID(), a.LocalName)
+		fmt.Printf("Found '%s' with ID '%s'\n", a.LocalName, p.ID())
 
 		peripherals = append(peripherals, p.ID())
 	}
@@ -68,6 +68,8 @@ func main() {
 	)
 
 	d.Init(onStateChanged)
+
+	fmt.Println("Scanning for Playbulb Candles...")
 
 	<-done
 }
