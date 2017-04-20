@@ -13,6 +13,7 @@ const (
 	candleServiceUUID = "ff02"
 	effectCharUUID    = "fffb"
 	colourCharUUID    = "fffc"
+	toggleCharUUID    = "2a37"
 )
 
 type Candle interface {
@@ -22,6 +23,7 @@ type Candle interface {
 
 	SetEffect(*Effect) error
 	SetColour(*Colour) error
+	OnToggle(*func(bool)) error
 	Off() error
 }
 
@@ -30,6 +32,7 @@ type candle struct {
 	per              gatt.Peripheral
 	colourChar       *gatt.Characteristic
 	effectChar       *gatt.Characteristic
+	toggleChar       *gatt.Characteristic
 	doneChannel      chan struct{}
 	connectedChannel chan bool
 	connected        bool
@@ -120,6 +123,15 @@ func (p *candle) Connect() error {
 	}
 }
 
+func (p *candle) OnToggle(f func(bool)) error {
+	return p.per.SetNotifyValue(p.toggleChar, func(c *gatt.Characteristic, b []byte, err error) {
+		if len(b) >= 4 {
+			isOn := b[1] != 0 || b[2] != 0 || b[3] != 0
+			f(isOn)
+		}
+	})
+}
+
 func (p *candle) IsConnected() bool {
 	return p.connected
 }
@@ -188,6 +200,8 @@ func (p *candle) onPeripheralConnected(per gatt.Peripheral, err error) {
 				p.effectChar = c
 			case cUUID == colourCharUUID:
 				p.colourChar = c
+			case cUUID == toggleCharUUID:
+				p.toggleChar = c
 			default:
 				continue
 			}
