@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	candleID          = "700ef5636bb249b8b95cdee4def26000" // Change this to your candle id
+	candleID          = "7d61a760051544f4b83307bc316fada6" // Change this to your candle id
 	effectChangeDelay = 4 * time.Second
 )
 
@@ -24,6 +24,14 @@ func main() {
 	if err != nil {
 		fmt.Println("Failed to connect", err)
 	}
+
+	p.OnToggle(func (isOn bool) {
+		if (isOn) {
+			fmt.Println("LED on")
+		} else {
+			fmt.Println("LED off")
+		}
+	})
 
 	red, _ := playbulb.ColourFromHexString("00FF0000")
 	green, _ := playbulb.ColourFromHexString("8000FF00") // light green
