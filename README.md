@@ -1,6 +1,6 @@
 # playbulb-candle
 
-An OSX/Linux command line tool for controlling the MiPOW Playbulb Candle. 
+An OSX/Linux command line tool for controlling the MiPOW Playbulb Candle.
 
 Note that the same candle may have a different ID when viewed from different OSX computers.
 
@@ -19,6 +19,11 @@ brew install playbulb-candle
 #### From source
 
 Install in the usual Go project way. For further information, see https://golang.org/doc/code.html#Command
+
+```
+# Install dependencies
+go get github.com/currantlabs/gatt
+```
 
 ## Usage
 
@@ -39,7 +44,7 @@ candle-cli -colour "000000FF" -effect "pulse" -speed 120 "e1817cd1d2cd4c088a094b
 
 #### examples/discover.go
 
-Listens for Bluetooth LE advertising packets and lists any Playbulb Candles found. 
+Listens for Bluetooth LE advertising packets and lists any Playbulb Candles found.
 It will keep scanning until it receives a TERM or INT signal.
 Useful for finding the ID of your candle which you will need in order to connect to it.
 
