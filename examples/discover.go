@@ -31,6 +31,9 @@ func containsString(ss []string, s string) bool {
 
 func onStateChanged(d gatt.Device, s gatt.State) {
 	switch s {
+	case gatt.StatePoweredOff:
+		fmt.Println("Please enable Bluetooth and try again")
+		os.Exit(1)
 	case gatt.StatePoweredOn:
 		// only look for devices that advertise a Playbulb candle service
 		d.Scan([]gatt.UUID{gatt.MustParseUUID(candleService)}, false)
