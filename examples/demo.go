@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/ajesler/playbulb-candle"
 	"time"
@@ -17,7 +18,15 @@ func delay() {
 }
 
 func main() {
-	p := playbulb.NewCandle(candleID)
+	flag.Parse()
+
+	candleID := flag.Args()
+	if len(candleID) != 1 {
+		fmt.Println("Please supply a candleID, eg 'go run examples/demo.go <your-candle-id>'")
+		return
+	}
+
+	p := playbulb.NewCandle(candleID[0])
 
 	fmt.Println("Connecting to", candleID)
 	err := p.Connect()
@@ -25,8 +34,8 @@ func main() {
 		fmt.Println("Failed to connect", err)
 	}
 
-	p.OnToggle(func (isOn bool) {
-		if (isOn) {
+	p.OnToggle(func(isOn bool) {
+		if isOn {
 			fmt.Println("LED on")
 		} else {
 			fmt.Println("LED off")
