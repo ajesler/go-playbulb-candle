@@ -23,7 +23,7 @@ type Candle interface {
 
 	SetEffect(*Effect) error
 	SetColour(*Colour) error
-	OnToggle(*func(bool)) error
+	OnToggle(func(bool)) error
 	Off() error
 }
 

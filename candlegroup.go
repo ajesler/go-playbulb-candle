@@ -81,6 +81,14 @@ func (cg *CandleGroup) SetColour(cl *Colour) error {
 	}
 }
 
+func (cg *CandleGroup) OnToggle(f func(bool)) error {
+  for _, c := range cg.candles {
+    c.OnToggle(f)
+  }
+
+  return nil
+}
+
 func (cg *CandleGroup) Off() error {
 	es := make([]string, 0)
 

@@ -97,7 +97,7 @@ func main() {
 	err = candle.Connect()
 	if err != nil {
 		fmt.Println(err)
-		return
+		os.Exit(1)
 	}
 
 	candle.SetEffect(effect)
