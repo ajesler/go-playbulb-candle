@@ -20,10 +20,6 @@ brew install playbulb-candle
 
 Install in the usual Go project way. For further information, see https://golang.org/doc/code.html#Command
 
-```
-# Install dependencies
-go get github.com/currantlabs/gatt
-```
 
 ## Usage
 

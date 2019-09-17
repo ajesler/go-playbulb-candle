@@ -1,7 +1,7 @@
 package playbulb_test
 
 import (
-	"github.com/ajesler/playbulb-candle"
+	"ajesler/playbulb"
 	"testing"
 )
 

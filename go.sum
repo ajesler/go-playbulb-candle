@@ -1,0 +1,4 @@
+github.com/ajesler/playbulb-candle v0.1.1 h1:JtZhCjM4pmF5erSd0AGRlt5HeStjo9r0D/a6wZWbsVQ=
+github.com/ajesler/playbulb-candle v0.1.1/go.mod h1:A7CQR8nNqX16B1q40ZhBrZ3oU5wWVoH56JJMrOvX6NU=
+github.com/bettercap/gatt v0.0.0-20190910104059-3c65008f5425 h1:Rss0CwtQotZmcyHJDTFPh48CdevfjfGJPKiRTzbPRTY=
+github.com/bettercap/gatt v0.0.0-20190910104059-3c65008f5425/go.mod h1:xbRFD+l8RcbQ3DscCiYX0dgEnXbwozZgm6oP2GXic+0=

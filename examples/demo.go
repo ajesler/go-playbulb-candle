@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/ajesler/playbulb-candle"
 	"time"
+
+	"ajesler/playbulb"
 )
 
 const (
