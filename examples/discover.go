@@ -6,8 +6,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/currantlabs/gatt"
-	"github.com/currantlabs/gatt/examples/option"
+	"github.com/bettercap/gatt"
+	"github.com/bettercap/gatt/examples/option"
 )
 
 const (

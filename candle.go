@@ -3,10 +3,11 @@ package playbulb
 import (
 	"errors"
 	"fmt"
-	"github.com/currantlabs/gatt"
-	"github.com/currantlabs/gatt/examples/option"
 	"strings"
 	"time"
+
+	"github.com/bettercap/gatt"
+	"github.com/bettercap/gatt/examples/option"
 )
 
 const (
