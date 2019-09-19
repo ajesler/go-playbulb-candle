@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	candleID          = "7d61a760051544f4b83307bc316fada6" // Change this to your candle id
+	candleID          = "83e86d136d1646e88556975133c7ed29" // Change this to your candle id
 	effectChangeDelay = 4 * time.Second
 )
 
